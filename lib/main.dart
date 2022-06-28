@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Quick Gestures',
+      // TODO implement proper theming
       theme: ThemeData(
         // This is the theme of your application.
         primarySwatch: Palette.ink,
