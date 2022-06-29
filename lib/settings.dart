@@ -36,10 +36,17 @@ class SettingsPageState extends State<SettingsPage> {
 
     return Scaffold(
       appBar: AppBar(
-
+        title: Text("Settings", style: TextStyle(fontSize: 20,),),
       ),
       body:
           SettingsList(
+            lightTheme: SettingsThemeData(
+              settingsListBackground: paper,
+              titleTextColor: ink,
+            ),
+
+            platform: DevicePlatform.android,
+            applicationType: ApplicationType.material,
             sections: [
               SettingsSection(
                 title: Text('Display'),
@@ -52,7 +59,7 @@ class SettingsPageState extends State<SettingsPage> {
                       });
                     },
                     initialValue: shuffle,
-                    leading: Icon(Icons.format_paint),
+                    leading: Icon(Icons.shuffle),
                     title: Text('Shuffle'),
                     description: Text("Randomize display order of images in folder"),
                   ),
@@ -64,7 +71,7 @@ class SettingsPageState extends State<SettingsPage> {
                       });
                     },
                     initialValue: grid,
-                    leading: Icon(Icons.format_paint),
+                    leading: Icon(Icons.grid_3x3),
                     title: Text('Show Grid'),
                     description: Text("Show grid overlay to help with reference."),
                   ),
@@ -82,7 +89,7 @@ class SettingsPageState extends State<SettingsPage> {
                       });
                     },
                     initialValue: flip_h,
-                    leading: Icon(Icons.format_paint),
+                    leading: Icon(Icons.flip),
                     title: Text('Flip Horizontally'),
                     description: Text("Randomly flip images horizonally for variety."),
                   ),
@@ -94,7 +101,10 @@ class SettingsPageState extends State<SettingsPage> {
                       });
                     },
                     initialValue: flip_v,
-                    leading: Icon(Icons.format_paint),
+                    leading: Transform.rotate(
+                      angle: 3.14159 / 2,
+                      child: Icon(Icons.flip),
+                    ),
                     title: Text('Flip Vertically'),
                     description: Text("Randomly flip images vertically for variety."),
                   ),

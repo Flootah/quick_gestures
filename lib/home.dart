@@ -47,11 +47,11 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
   // images list
   List<File> images = List.empty();
   // interval selections
-
+  List<bool> intSelections = List.generate(6, (_) => false);
 
   @override
   void initState() {
-    super.initState();
+    intSelections[0] == true;
     // init main tab controller
     _controller = TabController(vsync: this, length: 4);
     _controller.addListener(() {
@@ -64,6 +64,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     dir = Directory(path);
     // set text for thingy
     processDir();
+    super.initState();
   }
 
   @override
@@ -75,8 +76,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
   @override
   Widget build(BuildContext context) {
     // list of selections for interval mode
-    List<bool> intSelections = List.generate(6, (_) => false);
-    intSelections[0] == true;
+
+
 
     final ButtonStyle bstyle =
     ElevatedButton.styleFrom(
@@ -143,8 +144,12 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
 
 
           children: <Widget>[
-            Image.asset("assets/splash.png"),
             Expanded(
+              flex: 1,
+              child: Image.asset("assets/splash.png"),
+            ),
+            Expanded(
+              flex: 1,
               //decoration: BoxDecoration(color: Colors.blue),
               //height: 500,
               child:
@@ -159,7 +164,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                           onPressed: () {
                             chooseDir();
                           },
-                          child: Text("Choose Folder..."),
+                          child: Text("Choose Folder...", style: TextStyle(color: paper),),
                         ),
                         Text(dirText),
                       ],
@@ -209,16 +214,9 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                               SizedBox(
                                 height: 40,
                                 child: ToggleButtons(
-                                  color: Colors.blue,
-                                  selectedColor: Colors.red,
-                                  selectedBorderColor: Colors.red,
-                                  fillColor: Colors.red,
-                                  splashColor: Colors.red,
-
                                   onPressed: (int index) {
                                     setState(() {
                                       intSelections[index] = !intSelections[index];
-                                      /*
                                       for (int buttonIndex = 0; buttonIndex < intSelections.length; buttonIndex++) {
                                         if (buttonIndex == index) {
                                           intSelections[buttonIndex] = true;
@@ -226,13 +224,12 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                                           intSelections[buttonIndex] = false;
                                         }
                                       }
-                                      */
                                     });
                                   },
                                   isSelected: intSelections,
 
                                   children: const <Widget>[
-                                    Icon(Icons.ac_unit_outlined),
+                                    Text("30s"),
                                     Text("45s"),
                                     Text("1m"),
                                     Text("2m"),
@@ -293,7 +290,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) =>
-                          SessionPage(images: images, sessionType: page)),
+                          SessionPage(images: images, sessionType: page, interval: getInterval(),)),
                       // TODO add slide animation
                     );
                   },
@@ -301,7 +298,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                   child:
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
-                    child: Text("BEGIN"),
+                    child: Text("BEGIN", style: TextStyle(color: paper),),
                   ),
                 ),
               ),
@@ -319,7 +316,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
       fsType: FilesystemType.folder,
       allowedExtensions: ['.jpg', 'jpeg', '.png'],
       pickText: 'Use this folder',
-      folderIconColor: paper,
+      folderIconColor: ink,
     );
 
     UserSimplePreferences.setString("path", path ?? "");
@@ -396,6 +393,30 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     setState(() {
       dirText = str;
     });
+  }
+
+  int getInterval() {
+    int i = 0;
+    for(; i < intSelections.length; i++) {
+      if(intSelections[i] == true) {
+        break;
+      }
+    }
+    switch(i) {
+      case 0:
+        return 30;
+      case 1:
+        return 45;
+      case 2:
+        return 60;
+      case 3:
+        return 120;
+      case 4:
+        return 300;
+      case 5:
+        return 600;
+    }
+    return 30;
   }
 }
   
