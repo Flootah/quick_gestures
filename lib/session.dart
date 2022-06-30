@@ -131,6 +131,7 @@ class SessionPageState extends State<SessionPage> with SingleTickerProviderState
                     ),
                   ),
                   /*********************** timer  *********************/
+                  // TODO make sound when image about to change
                   Positioned(
                     top: 20,
                     right: 20,
@@ -145,7 +146,7 @@ class SessionPageState extends State<SessionPage> with SingleTickerProviderState
                           height: 50,
                           strokeWidth: 5.0,
                           fillColor: ink,
-                          //textStyle: TextStyle(color: paper, fontSize: 16),
+                          textStyle: TextStyle(color: ink, fontSize: 16, decoration: TextDecoration.none),
                           ringColor: Colors.transparent,
                           autoStart: true,
                           isReverse: true,
@@ -164,7 +165,7 @@ class SessionPageState extends State<SessionPage> with SingleTickerProviderState
                         height: 60,
                         width: double.infinity,
                         color: ink.withOpacity(0.6),
-                        child: const Text("Paused", style: TextStyle(color: paper, ), textAlign: TextAlign.center,),
+                        child: const Text("Paused", style: TextStyle(color: paper, decoration: TextDecoration.none), textAlign: TextAlign.center,),
                       ),
                     ),
                   ),
@@ -228,6 +229,7 @@ class SessionPageState extends State<SessionPage> with SingleTickerProviderState
 
                   /*********************** controls *********************/
                   //TODO add flip buttons
+                  //TODO spread out left/right buttons
                   FadeTransition(
                     opacity: tAnim,
                     child: Scaffold(

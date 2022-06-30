@@ -10,21 +10,8 @@ class AboutPage extends StatefulWidget {
 }
 
 class AboutPageState extends State<AboutPage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    setState(() {
-      _counter--;
-    });
-  }
-
-  // TODO Implement about page
+  static const Color paper = Color(0xffeadece);
+  static const Color ink = Color(0xff111111);
 
   @override
   Widget build(BuildContext context) {
@@ -34,26 +21,35 @@ class AboutPageState extends State<AboutPage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'This is the settings page',
-            ),
-            const Text(
-              'You have pushed the button this many times:',
+          mainAxisAlignment: MainAxisAlignment.start,
+
+          children: const <Widget>[
+            SizedBox(
+              height: 30,
             ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              "QuickGestures",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                color: ink,
+              ),
+            ),
+            Text(
+              '\nA tool for artists to practice quick gesture drawings.', textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              'Code, sketches, and design:\n\n'
+                  'Ed "flootah" Saenz',
+              textAlign: TextAlign.center,
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _decrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

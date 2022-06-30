@@ -47,7 +47,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
   // images list
   List<File> images = List.empty();
   // interval selections
-  List<bool> intSelections = List.generate(6, (_) => false);
+  List<bool> intSelections = [true, false, false, false, false, false];
 
   @override
   void initState() {
@@ -146,7 +146,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
           children: <Widget>[
             Expanded(
               flex: 1,
-              child: Image.asset("assets/splash.png"),
+              child: Image.asset("assets/gesture.png"),
             ),
             Expanded(
               flex: 1,
@@ -166,7 +166,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                           },
                           child: Text("Choose Folder...", style: TextStyle(color: paper),),
                         ),
-                        Text(dirText),
+                        Text(dirText, textAlign: TextAlign.center,),
                       ],
                     ),
                   ),
@@ -229,8 +229,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                                   isSelected: intSelections,
 
                                   children: const <Widget>[
+                                    Text("10s"),
                                     Text("30s"),
-                                    Text("45s"),
                                     Text("1m"),
                                     Text("2m"),
                                     Text("5m"),
@@ -287,9 +287,13 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
                 child:
                 ElevatedButton(
                   onPressed: () {
+                    if(images.isEmpty) {
+                      return;
+                    }
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>
+                      MaterialPageRoute(
+                          builder: (context) =>
                           SessionPage(images: images, sessionType: page, interval: getInterval(),)),
                       // TODO add slide animation
                     );
@@ -308,8 +312,10 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     );
   }
 
+  // TODO better error handling.
   void chooseDir() async {
-    String? path = await FilesystemPicker.open(
+    String? path = "";
+    path = await FilesystemPicker.open(
       title: 'Choose image folder',
       context: context,
       rootDirectory: Directory("storage/emulated/0/"),
@@ -317,9 +323,13 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
       allowedExtensions: ['.jpg', 'jpeg', '.png'],
       pickText: 'Use this folder',
       folderIconColor: ink,
-    );
+    ).onError((error, stackTrace) => path = "");
 
     UserSimplePreferences.setString("path", path ?? "");
+
+
+
+
     dir = Directory(path ?? "");
     //print("chosen path is $path");
     processDir();
@@ -354,7 +364,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
       return;
     }
 
-    Future<List<File>> s = Glob("${dir.path}/**.{jpg, png}")
+    Future<List<File>> s = Glob("${dir.path}/**.{jpg, png, jpeg}")
                             .list(root: dir.path)
                             .where((entity) => entity is File)
                             .cast<File>().toList();
@@ -367,13 +377,10 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     // prep images list and update text when finished
     images = await s;
     s.whenComplete(() => updateText());
-
-
-
   }
 
   Stream<File> fetchImg(Directory dir) {
-    return Glob("${dir.path}/**.{jpg, png, jpeg}")
+    return Glob("${dir.path}/**.{png, jpg, jpeg}")
         .list(root: dir.path)
         .where((entity) => entity is File)
         .cast<File>();
@@ -383,8 +390,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     //print("images: $images");
     String str = "";
 
-    if(images.isEmpty) {
-      str = "No images found in ${dir.path.split('/').last}! Please try another folder.";
+    if(images.isEmpty || images == null) {
+      str = "No images found in ${dir.path.split('/').last}!\n Please try another folder.";
     } else {
       str = "Folder: ${dir.path.split('/').last} \n"
           "Found ${images.length} images in folder";
@@ -404,9 +411,9 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
     }
     switch(i) {
       case 0:
-        return 30;
+        return 10;
       case 1:
-        return 45;
+        return 30;
       case 2:
         return 60;
       case 3:
